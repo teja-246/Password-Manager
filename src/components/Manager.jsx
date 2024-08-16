@@ -22,7 +22,7 @@ const Manager = () => {
     }
 
 
-    const [form, setform] = useState({ site: "", username: "", password: ""})
+    const [form, setform] = useState({ site: "", username: "", password: "" })
 
     const [passwordarray, setpasswordarray] = useState([])
 
@@ -39,24 +39,59 @@ const Manager = () => {
     }, [])
 
     const savepassword = () => {
-        setpasswordarray([...passwordarray, {...form, id: uuidv4()}])
-        localStorage.setItem("password", JSON.stringify([...passwordarray, {...form, id: uuidv4()}]))
-        console.log(...passwordarray, {...form, id: uuidv4()})
-
-
+        if (form.site.length > 3 && form.username.length > 0 && form.password.length > 0) {
+            setpasswordarray([...passwordarray, { ...form, id: uuidv4() }])
+            localStorage.setItem("password", JSON.stringify([...passwordarray, { ...form, id: uuidv4() }]))
+            console.log(...passwordarray, { ...form, id: uuidv4() })
+        //    toast ('Saved Successfully!', {
+        //         position: "top-right",
+        //         autoClose: 2000,
+        //         hideProgressBar: false,
+        //         closeOnClick: true,
+        //         pauseOnHover: false,
+        //         draggable: true,
+        //         progress: undefined,
+        //         theme: "dark",
+        //         // transition: "Bounce"
+        //     });
+        }
+        else {
+            // toast('Enter valid credentials', {
+            //     position: "top-right",
+            //     autoClose: 2000,
+            //     hideProgressBar: false,
+            //     closeOnClick: true,
+            //     pauseOnHover: false,
+            //     draggable: true,
+            //     progress: undefined,
+            //     theme: "dark",
+            //     // transition: "Bounce"
+            // });
+        }
     }
 
     const editpassword = (id) => {
-        setform(passwordarray.filter(item=>item.id === id)[0])
-        setpasswordarray(passwordarray.filter(item=>item.id!==id))
+        setform(passwordarray.filter(item => item.id === id)[0])
+        // setpasswordarray(passwordarray.filter(item=>item.id!==id))
     }
 
     const deletepassword = (id) => {
         let conf = confirm("Are you sure, you want to delete this password?")
-        if(conf){
-            setpasswordarray(passwordarray.filter(item=>item.id!==id))
-            localStorage.setItem("password", JSON.stringify(passwordarray.filter(item=>item.id!==id)))
+        if (conf) {
+            setpasswordarray(passwordarray.filter(item => item.id !== id))
+            localStorage.setItem("password", JSON.stringify(passwordarray.filter(item => item.id !== id)))
         }
+        // toast('Password Deleted', {
+        //     position: "top-right",
+        //     autoClose: 2000,
+        //     hideProgressBar: false,
+        //     closeOnClick: true,
+        //     pauseOnHover: false,
+        //     draggable: true,
+        //     progress: undefined,
+        //     theme: "dark",
+        //     // transition: "Bounce"
+        // });
     }
 
     const handlechange = (e) => {
@@ -65,17 +100,17 @@ const Manager = () => {
 
     const imgref = useRef()
     const copytext = (text) => {
-        toast('Copied to clipboard', {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            // transition: "Bounce"
-        });
+        // toast('Copied to clipboard', {
+        //     position: "top-right",
+        //     autoClose: 2000,
+        //     hideProgressBar: false,
+        //     closeOnClick: true,
+        //     pauseOnHover: false,
+        //     draggable: true,
+        //     progress: undefined,
+        //     theme: "light",
+        //     // transition: "Bounce"
+        // });
         navigator.clipboard.writeText(text)
         // imgref.current.src = "/copied.svg"
     }
@@ -97,9 +132,9 @@ const Manager = () => {
             {/* Same as */}
             <ToastContainer />
             <div>
-                <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
+                <div className="fixed inset-0 z-[-10] h-full w-full flex items-center justify-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
 
-                <div className="mx-auto max-w-4xl gap-4 text-black">
+                <div className=" mx-auto max-w-4xl gap-4 text-black">
                     <h1 className='text-green-500 text-3xl font-bold text-center '>
                         Your Personalised Password Manager!
                     </h1>
@@ -128,7 +163,9 @@ const Manager = () => {
                     </div>
 
                     <div className="passwords text-white w-full ">
-                        <h2 className=''>Your Passwords</h2>
+                        <div className='flex justify-center'>
+                            <h2 className='py-4 text-2xl'>Your Passwords</h2>
+                        </div>
                         {passwordarray.length === 0 && <div>No Passwords</div>}
                         {passwordarray.length != 0 &&
                             <table className="table-auto w-full rounded-lg overflow-hidden">
@@ -145,12 +182,12 @@ const Manager = () => {
                                         return <tr key={index} className=''>
                                             <td className='text-center w-1/4 border border-white py-2'><a href={item.site} target='_blank'>{item.site}</a></td>
                                             <td className='text-center w-1/4 border border-white py-2'>{item.username}</td>
-                                            <td className='text-center w-full border border-white py-4 flex justify-center items-center gap-14'>{item.password}
+                                            <td className='text-center w-full border border-white py-4 flex justify-center items-center gap-14'>{"*".repeat(item.password.length)}
                                                 <img ref={imgref} onClick={() => { copytext(item.password) }} className='cursor-pointer' id='copyimg' src="src/assets/copy.svg" alt="" />
                                             </td>
                                             <td className='text-center w-1/4 border border-white py-2'>
-                                                <span onClick={()=>{editpassword(item.id)}} className='mx-3'>
-                                                    <lord-icon 
+                                                <span onClick={() => { editpassword(item.id) }} className='mx-3'>
+                                                    <lord-icon
                                                         src="https://cdn.lordicon.com/wuvorxbv.json"
                                                         trigger="click"
                                                         stroke="bold"
@@ -158,13 +195,13 @@ const Manager = () => {
                                                     >
                                                     </lord-icon>
                                                 </span>
-                                                <span onClick={()=>{deletepassword(item.id)}} className='mx-3'>
+                                                <span onClick={() => { deletepassword(item.id) }} className='mx-3'>
                                                     <lord-icon
                                                         src="https://cdn.lordicon.com/drxwpfop.json"
                                                         trigger="click"
                                                         stroke="bold"
                                                         colors="primary:#ffffff,secondary:#16c72e"
-                                                        >
+                                                    >
                                                     </lord-icon>
                                                 </span>
                                             </td>
