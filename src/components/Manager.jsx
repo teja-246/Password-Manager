@@ -43,17 +43,17 @@ const Manager = () => {
             setpasswordarray([...passwordarray, { ...form, id: uuidv4() }])
             localStorage.setItem("password", JSON.stringify([...passwordarray, { ...form, id: uuidv4() }]))
             console.log(...passwordarray, { ...form, id: uuidv4() })
-        //    toast ('Saved Successfully!', {
-        //         position: "top-right",
-        //         autoClose: 2000,
-        //         hideProgressBar: false,
-        //         closeOnClick: true,
-        //         pauseOnHover: false,
-        //         draggable: true,
-        //         progress: undefined,
-        //         theme: "dark",
-        //         // transition: "Bounce"
-        //     });
+           toast ('Saved Successfully!', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                // transition: "Bounce"
+            });
         }
         else {
             // toast('Enter valid credentials', {
